@@ -23,6 +23,7 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+    configureOhosArm64Target(project)
     macosX64()
     macosArm64()
     watchosArm32()
@@ -47,3 +48,26 @@ kotlin {
 }
 
 apply(from = file("../gradle/publish.gradle.kts"))
+
+fun org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension.configureOhosArm64Target(project: Project) {
+    val target = javaClass.methods
+        .firstOrNull { method -> method.name == "ohosArm64" && method.parameterCount == 0 }
+        ?.invoke(this)
+    if (target != null) {
+        return
+    }
+
+    val presets = javaClass.methods
+        .firstOrNull { method -> method.name == "getPresets" && method.parameterCount == 0 }
+        ?.invoke(this)
+    val getByName = presets?.javaClass?.methods
+        ?.firstOrNull { method -> method.name == "getByName" && method.parameterTypes.contentEquals(arrayOf(String::class.java)) }
+    val preset = getByName?.invoke(presets, "ohosArm64")
+    val targetFromPreset = javaClass.methods.firstOrNull { method ->
+        method.name == "targetFromPreset" && method.parameterCount == 1
+    }
+    if (preset == null || targetFromPreset == null) {
+        error("Kotlin Multiplatform does not expose mandatory ohosArm64 target under the current Gradle/KGP classpath.")
+    }
+    targetFromPreset.invoke(this, preset)
+}

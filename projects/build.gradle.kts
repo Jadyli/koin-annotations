@@ -2,8 +2,8 @@ plugins {
     //trick: for the same plugin versions in all sub-modules
     alias(libs.plugins.kotlinMultiplatform).apply(false)
     alias(libs.plugins.dokka).apply(false)
-    alias(libs.plugins.nexusPublish)
-    alias(libs.plugins.nmcp)
+    alias(libs.plugins.nexusPublish).apply(false)
+    alias(libs.plugins.nmcp).apply(false)
 }
 
 fun getRepositoryUsername(): String =
@@ -22,19 +22,6 @@ fun getRepositoryPassword(): String =
 //    }
 //}
 
-nmcpAggregation {
-    centralPortal {
-        username.set(getRepositoryUsername())
-        password.set(getRepositoryPassword())
-        // publish manually from the portal
-        publishingType = "USER_MANAGED"
-    }
-
-    // Publish all projects that apply the 'maven-publish' plugin
-    publishAllProjectsProbablyBreakingProjectIsolation()
-
-}
-
 allprojects {
 
     val koinAnnotationsVersion: String by project
@@ -48,5 +35,22 @@ allprojects {
         dependsOn(dokkaHtml)
         archiveClassifier.set("javadoc")
         from(dokkaHtml.outputDirectory)
+    }
+}
+
+subprojects {
+    plugins.withId("maven-publish") {
+        extensions.configure<PublishingExtension> {
+            repositories {
+                maven {
+                    name = "aliyun"
+                    url = uri("https://packages.aliyun.com/66b7f208953179b1ec5f5db8/maven/2486646-snapshot-3qr5na")
+                    credentials {
+                        username = "66b7e3a18043c5959c0c01e2"
+                        password = "no2udBiPX]2("
+                    }
+                }
+            }
+        }
     }
 }

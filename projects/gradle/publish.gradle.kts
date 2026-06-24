@@ -30,5 +30,3 @@ configure<PublishingExtension> {
         }
     }
 }
-
-apply(from = file("../gradle/signing.gradle.kts"))

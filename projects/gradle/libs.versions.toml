@@ -3,16 +3,17 @@
 # /!\ Koin in gradle.properties /!\
 
 # Core
-kotlin = "2.2.20"
+kotlin = "2.0.21-KBA-010"
 koin = "4.1.0"
-ksp = "2.3.2"
+koin-core-annotations = "4.1.0-kuikly-2.0.21-SNAPSHOT"
+ksp = "2.0.21-1.0.28"
 publish = "2.0.0"
 dokka = "1.9.10"
 nmcp = "1.0.1"
 
 [libraries]
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-core-annotations = { module = "io.insert-koin:koin-core-annotations", version.ref = "koin" }
+koin-core-annotations = { module = "io.insert-koin:koin-core-annotations", version.ref = "koin-core-annotations" }
 ksp-api = {module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp"}
 
 [plugins]
